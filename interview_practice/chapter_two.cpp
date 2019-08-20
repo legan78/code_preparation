@@ -128,7 +128,70 @@ void get_m_to_last(){
 
 }
 
+
+void partition(Node* root, Node* pivot) {
+
+    Node* aux= root;
+    Node* left=NULL;
+    Node* right=NULL;
+    Node* left_aux= NULL;
+    Node* right_aux= NULL;
+
+
+    while(aux!=NULL) {
+        if(aux==pivot){ aux=aux->next; continue;} /// not comparing itself
+        // std::cout << "The value of the aux is: "<< aux->data <<std::endl;
+
+        if(pivot->data > aux->data) {
+            if(left==NULL) {
+                left=aux;
+                left_aux=aux;
+            } else {
+                left_aux->next=aux;
+                left_aux=aux;
+            }
+        } else {
+            if (right==NULL) {
+                right=aux;
+                right_aux=aux;
+            } else {
+                right_aux->next=aux;
+                right_aux=aux;
+            }
+        print(right);
+        std::cout<<std::endl;
+        }
+        aux= aux->next;
+    }
+
+    right_aux->next=NULL;
+    left_aux->next=pivot;
+    pivot->next= right;
+    root= left;
+}
+
+
 int main() {
-    
+    Node *head=NULL, *temp=NULL;
+    Node *part=NULL;
+
+    for(int i=10;i>=0;i--){
+        if(head==NULL)
+            head=temp=new Node(i);
+        else {
+            temp->next = new Node(i);
+            temp=temp->next;
+        }
+        if(i==5) part=temp;
+    }
+
+    print(head);
+    std::cout << "\nPartition around: " <<part->data <<std::endl;
+    partition(head, part);
+    print(head);
+    std::cout << std::endl;
+
+
+
     return 0;
 }
