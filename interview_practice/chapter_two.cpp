@@ -25,7 +25,7 @@ int Node::counter=0;
 void print(Node *root) {
     Node *temp = root;
     while(temp!=NULL) {
-        cout<<temp->id<<"->";
+        cout<<temp->data<<"->";
         temp=temp->next;
     }
 }
@@ -129,53 +129,41 @@ void get_m_to_last(){
 }
 
 
-void partition(Node* root, Node* pivot) {
+Node* partition(Node* root, Node* pivot) {
+    //// set pivot to the start of the list
+    int daux= root->data;
+    root->data= pivot->data;
+    pivot->data= daux;
 
-    Node* aux= root;
-    Node* left=NULL;
-    Node* right=NULL;
-    Node* left_aux= NULL;
-    Node* right_aux= NULL;
-
+    Node* aux= root->next;
+    Node* left=root->next;
 
     while(aux!=NULL) {
-        if(aux==pivot){ aux=aux->next; continue;} /// not comparing itself
-        // std::cout << "The value of the aux is: "<< aux->data <<std::endl;
+        if(aux->data< root->data) {
+            std::cout << "Comparing: " << aux->data << "  with pivot "<< std::endl;
+            //// swap node data
+            int laux= left->data;
+            left->data= aux->data;
+            aux->data= laux;
 
-        if(pivot->data > aux->data) {
-            if(left==NULL) {
-                left=aux;
-                left_aux=aux;
-            } else {
-                left_aux->next=aux;
-                left_aux=aux;
-            }
-        } else {
-            if (right==NULL) {
-                right=aux;
-                right_aux=aux;
-            } else {
-                right_aux->next=aux;
-                right_aux=aux;
-            }
-        print(right);
-        std::cout<<std::endl;
+            //// increase the node frontier
+            left= left->next;
         }
+
         aux= aux->next;
     }
 
-    right_aux->next=NULL;
-    left_aux->next=pivot;
-    pivot->next= right;
-    root= left;
+    std::cout << left->data<<std::endl;
+
+    return root;
 }
 
 
-int main() {
+void do_partition() {
     Node *head=NULL, *temp=NULL;
     Node *part=NULL;
 
-    for(int i=10;i>=0;i--){
+    for(int i=50;i>=0;i--){
         if(head==NULL)
             head=temp=new Node(i);
         else {
@@ -187,11 +175,60 @@ int main() {
 
     print(head);
     std::cout << "\nPartition around: " <<part->data <<std::endl;
-    partition(head, part);
-    print(head);
+    Node* parted= partition(head, part);
+    print(parted);
     std::cout << std::endl;
 
+}
+
+
+int add_list(Node* n1, Node* n2) {
+    size_t l1=0, l2=0;
+    int cn=1, v1=0, v2=0;
+
+    Node* aux=n1;
+    while(aux!=NULL) {
+        int n= aux->data;
+        aux=aux->next; 
+        v1+= (n*cn);
+        cn*=10;
+    }
+
+    aux=n2;
+    cn=1;
+
+
+    while(aux!=NULL) {
+        int n= aux->data;
+        aux=aux->next; 
+        v2+= (n*cn);
+        cn*=10;
+    }
+
+
+
+    return v1+v2;
+}
+
+
+void add_list() {
+    Node* n1= new Node(7);
+    n1->next= new Node(1);
+    n1->next->next= new Node(6);
+
+    Node* n2= new Node(5);
+    n2->next= new Node(9);
+    n2->next->next= new Node(2);
+
+    std::cout << add_list(n1, n2) << std::endl;
+}
+
+int main() {
 
 
     return 0;
 }
+
+
+
+
